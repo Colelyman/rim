@@ -30,7 +30,7 @@ public class RImPro20 {
             String protocol = "imaps";
             String host = "imap.gmail.com";
             String user = "belnethreferral@gmail.com";
-            String password = "Moroni10";
+            String password = "";
             JavamailExtraction.getMail(protocol, host, user, password);
             referrals = JavamailExtraction.extractContent();
         } catch (IOException ex) {
@@ -67,7 +67,7 @@ public class RImPro20 {
         // Send SMS
         MessageBirdApi smsApi = new MessageBirdApi();
 
-        smsApi.authenticate("bbn2015900", "8ldsleiden");        //authenticate with MessageBird SMS API
+        smsApi.authenticate("bbn2015900", "");        //authenticate with MessageBird SMS API
         smsApi.setSender("Office");                     //set the name or number from where the message come from
         for (Referral ref : referrals) {
             if(ref.isValid()) {
