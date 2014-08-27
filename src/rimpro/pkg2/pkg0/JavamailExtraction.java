@@ -118,7 +118,6 @@ public class JavamailExtraction {
     }
 
     public static List<Referral> extractContent() throws IOException {
-        System.out.println(messages.size());
         for (String msg : messages) {
             Referral ref = new Referral();
             StringReader temp = new StringReader(msg);
@@ -142,7 +141,7 @@ public class JavamailExtraction {
             // read name
             buff.readLine();
             str = buff.readLine();
-            if(str.split(":").length >= 2)
+            if(str.split(":")[1].length() >= 2)
                 ref.setName(str.split(":")[1].trim());
             else 
                 ref.setName("NO NAME");
@@ -151,7 +150,7 @@ public class JavamailExtraction {
             // read address
             buff.readLine();
             str = buff.readLine();
-            if(str.split(":").length >= 2)
+            if(str.split(":")[1].length() >= 2)
                 ref.setStreetName(str.split(":")[1].trim());
             else
                 ref.setStreetName("NO STREET NAME");
@@ -175,7 +174,7 @@ public class JavamailExtraction {
             // read city
             buff.readLine();
             str = buff.readLine();
-            if(str.split(":").length >= 2)
+            if(str.split(":")[1].length() >= 2)
                 ref.setCity(str.split(":")[1].trim());
             else
                 ref.setCity("NO CITY");
@@ -185,7 +184,7 @@ public class JavamailExtraction {
             buff.readLine();
             str = buff.readLine();
             try {
-                if(str.split(":").length >= 2)
+                if(str.split(":")[1].length() >= 2)
                     ref.setCountry(str.split(":")[1].toLowerCase().trim());
                 else {
                     ref.setCountry("NO COUNTRY");
