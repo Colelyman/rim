@@ -81,6 +81,15 @@ public class Referral {
     }
 
     public boolean isNLD() { // returns true if the country does not begin with 'b'
+        try {
+            if(country.equals("NO COUNTRY") || country.length() == 0) {
+                throw new myException("The country is invalid!! Referral id: " + this.id);
+            }
+        }
+        catch (myException e) {
+            System.out.println(e);
+            return false;
+        }
         if(country.substring(0, 1).equals("b"))
             return false;
         else

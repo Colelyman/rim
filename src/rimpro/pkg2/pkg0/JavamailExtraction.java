@@ -77,9 +77,8 @@ public class JavamailExtraction {
                 store.close();
                 System.exit(1);
             }
-
-            System.out.println("There are: " + folder.getNewMessageCount() + " new messages");
-            System.out.println("There are: " + totalMessages + " total messages");
+            
+            System.out.println("There are: " + totalMessages + " referrals to be distributed!!");
 
             // Beam up the messages Scotty...
             Message[] msgs = folder.getMessages();
@@ -132,7 +131,10 @@ public class JavamailExtraction {
                     continue;
                 }
                 if(str.substring(0, 5).equals("Email")) {
-                    ref.setEmail(str.split(":")[1]);
+                    if(str.split(":").length >= 2)
+                        ref.setEmail(str.split(":")[1]);
+                    else
+                        ref.setEmail("NO EMAIL");
                     break; // finished reading through the header and ready to read the information of the referral
                 }
             }
@@ -140,37 +142,68 @@ public class JavamailExtraction {
             // read name
             buff.readLine();
             str = buff.readLine();
-            ref.setName(str.split(":")[1].trim());
-            System.out.println(ref.getName());
+            if(str.split(":").length >= 2)
+                ref.setName(str.split(":")[1].trim());
+            else 
+                ref.setName("NO NAME");
+            //System.out.println(ref.getName());
             
             // read address
             buff.readLine();
             str = buff.readLine();
-            ref.setStreetName(str.split(":")[1].trim());
+            if(str.split(":").length >= 2)
+                ref.setStreetName(str.split(":")[1].trim());
+            else
+                ref.setStreetName("NO STREET NAME");
             //System.out.println(ref.getStreetName());
             
             // read postcode
             buff.readLine();
             str = buff.readLine();
-            ref.setFullPostcode(str.split(":")[1].trim());
-            //System.out.println(ref.getPostCode());
+            try {
+                if(str.split(":")[1].length() > 6)
+                    ref.setFullPostcode(str.split(":")[1].trim());
+                else {
+                    ref.setPostCode(0000);
+                    ref.setValid(false);
+                    throw new myException("Postcode is invalid!! Referral id: " + ref.getId());
+                }
+            } catch (myException e) {
+                System.out.println(e.toString());
+            }
             
             // read city
             buff.readLine();
             str = buff.readLine();
-            ref.setCity(str.split(":")[1].trim());
+            if(str.split(":").length >= 2)
+                ref.setCity(str.split(":")[1].trim());
+            else
+                ref.setCity("NO CITY");
             //System.out.println(ref.getCity());
             
             // read country
             buff.readLine();
             str = buff.readLine();
-            ref.setCountry(str.split(":")[1].toLowerCase().trim());
+            try {
+                if(str.split(":").length >= 2)
+                    ref.setCountry(str.split(":")[1].toLowerCase().trim());
+                else {
+                    ref.setCountry("NO COUNTRY");
+                    ref.setValid(false);
+                    throw new myException("The country is invalid!! Referral id: " + ref.getId());
+                }
+            } catch (myException e) {
+                System.out.println(e.toString());
+            }
             //System.out.println(ref.getCountry());
             
             // read phone number
             buff.readLine();
             str = buff.readLine();
-            ref.setPhone(str.split(":")[1].trim());
+            if(str.split(":").length >= 2)
+                ref.setPhone(str.split(":")[1].trim());
+            else
+                ref.setPhone("NO PHONE NUMBER");
             //System.out.println(ref.getPhone());
             
             buff.close();

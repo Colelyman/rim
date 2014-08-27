@@ -23,6 +23,7 @@ public class RImPro20 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        boolean test = true;
         List<Referral> referrals = new ArrayList();
         
         // Get mail using Javamail and Input data from emails into referral list
@@ -43,10 +44,11 @@ public class RImPro20 {
         
         PostcodeArea postcode = new PostcodeArea();
         
-        // Assign area and area phone numbers, send SMS
+        // Assign area and area phone numbers
         for(Referral ref : referrals) {
             try {
                 ref.setAssignedArea(postcode.getArea(ref.getPostCode(), ref.isNLD()));
+                System.out.println(ref.getAssignedArea());
                 if(ref.getAssignedArea().equals("null")) {
                     ref.setValid(false);
                     throw new myException("Referral ID: " + ref.getId() + " with Name: " + ref.getName() + " has an invalid postcode");
@@ -65,27 +67,29 @@ public class RImPro20 {
         }
         
         // Send SMS
-        MessageBirdApi smsApi = new MessageBirdApi();
+        if(!test){
+            MessageBirdApi smsApi = new MessageBirdApi();
 
-        smsApi.authenticate("bbn2015900", "");        //authenticate with MessageBird SMS API
-        smsApi.setSender("Office");                     //set the name or number from where the message come from
-        for (Referral ref : referrals) {
-            if(ref.isValid()) {
-                smsApi.addDestination(ref.getAreaPhone().toString()); //add number to destination list, this function can be called multiple times for more receivers
-                smsApi.setReference(ref.getId());                   //your unique reference
-                //smsApi.setTimestamp(2012, 2, 27, 11, 30);         //only use if you want to schedule message
-                try {
-                    smsApi.send(ref.toString()); //send the message to the receiver(s)
-                } catch (UnsupportedEncodingException ex) {
-                    Logger.getLogger(RImPro20.class.getName()).log(Level.SEVERE, null, ex);
+            smsApi.authenticate("bbn2015900", "");        //authenticate with MessageBird SMS API
+            smsApi.setSender("Office");                     //set the name or number from where the message come from
+            for (Referral ref : referrals) {
+                if(ref.isValid()) {
+                    smsApi.addDestination(ref.getAreaPhone().toString()); //add number to destination list, this function can be called multiple times for more receivers
+                    smsApi.setReference(ref.getId());                   //your unique reference
+                    //smsApi.setTimestamp(2012, 2, 27, 11, 30);         //only use if you want to schedule message
+                    try {
+                        smsApi.send(ref.toString()); //send the message to the receiver(s)
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(RImPro20.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    System.out.println("sent message: " + ref.getId());
+                    if(smsApi.getResponseCode().equals("01"))
+                        ref.setSent(true);
+                    else
+                        ref.setSent(false);
                 }
-                System.out.println("sent message: " + ref.getId());
-                if(smsApi.getResponseCode().equals("01"))
-                    ref.setSent(true);
-                else
-                    ref.setSent(false);
+                ref.setSent(false);
             }
-            ref.setSent(false);
         }
         
          // Export to excel
