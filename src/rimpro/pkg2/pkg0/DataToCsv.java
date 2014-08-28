@@ -28,7 +28,7 @@ public class DataToCsv {
                 writer.append(referrals.get(i).getId() + ','); //ReferralID
                 writer.append(referrals.get(i).getName() + ','); //Name
                 writer.append(referrals.get(i).getStreetName() + ','); //Street name
-                writer.append(referrals.get(i).getPostCode() + " " + referrals.get(i).getPostcodeLetters() + ','); //Postcode
+                writer.append(referrals.get(i).getPostCode() + referrals.get(i).getPostcodeLetters() + ','); //Postcode
                 writer.append(referrals.get(i).getCity() + ','); //City
                 writer.append(referrals.get(i).getCountry() + ','); //Country
                 writer.append(referrals.get(i).getPhone() + ','); //Phone number

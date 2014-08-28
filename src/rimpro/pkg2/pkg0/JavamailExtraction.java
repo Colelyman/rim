@@ -141,9 +141,9 @@ public class JavamailExtraction {
             // read name
             buff.readLine();
             str = buff.readLine();
-            if(str.split(":")[1].length() >= 2)
+            if(str.split(":")[1].length() >= 2) // to check if there is content
                 ref.setName(str.split(":")[1].trim());
-            else 
+            else // if there is no content if is replaces with NO ____
                 ref.setName("NO NAME");
             //System.out.println(ref.getName());
             

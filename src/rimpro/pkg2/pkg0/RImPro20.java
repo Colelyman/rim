@@ -23,7 +23,7 @@ public class RImPro20 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        boolean test = true;
+        boolean test = true; // if true, no text message is sent, if false text messages are sent
         List<Referral> referrals = new ArrayList();
         
         // Get mail using Javamail and Input data from emails into referral list
@@ -48,7 +48,6 @@ public class RImPro20 {
         for(Referral ref : referrals) {
             try {
                 ref.setAssignedArea(postcode.getArea(ref.getPostCode(), ref.isNLD()));
-                System.out.println(ref.getAssignedArea());
                 if(ref.getAssignedArea().equals("null")) {
                     ref.setValid(false);
                     throw new myException("Referral ID: " + ref.getId() + " with Name: " + ref.getName() + " has an invalid postcode");
@@ -92,7 +91,7 @@ public class RImPro20 {
             }
         }
         
-         // Export to excel
+         // Export to csv file
         DataToCsv writer = new DataToCsv(referrals);
         writer.GenerateCsvFile();
     }

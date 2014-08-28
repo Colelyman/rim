@@ -156,9 +156,8 @@ public class Referral {
         this.fullPostcode = fullPostcode.trim();
         this.fullPostcode.replaceAll("\\s","");
         setPostCode(Integer.parseInt(this.fullPostcode.substring(0, 4)));
-        if (this.fullPostcode.length()==6){
-            System.out.println(this.fullPostcode);
-            setPostcodeLetters(this.fullPostcode.substring(4,6));
+        if (this.fullPostcode.length() > 4){
+            setPostcodeLetters(this.fullPostcode.substring(4,7));
         }
     }
 
