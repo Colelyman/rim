@@ -33,6 +33,8 @@ public class DataToCsv {
                 writer.append(referrals.get(i).getCountry() + ','); //Country
                 writer.append(referrals.get(i).getPhone() + ','); //Phone number
                 writer.append(referrals.get(i).getAssignedArea() + ','); //Assigned area
+                if(referrals.get(i).isValid())
+                    writer.append(referrals.get(i).getAreaPhone().toString() + ','); //The phone number that the referral is sent to
                 if(referrals.get(i).isSent())
                     writer.append("SENT,\n");
                 else

@@ -118,7 +118,9 @@ public class JavamailExtraction {
     }
 
     public static List<Referral> extractContent() throws IOException {
+        int count = 1;
         for (String msg : messages) {
+            System.out.print("Retreiving message " + count);
             Referral ref = new Referral();
             StringReader temp = new StringReader(msg);
             BufferedReader buff = new BufferedReader(temp);
@@ -138,29 +140,35 @@ public class JavamailExtraction {
                 }
             }
             
+            System.out.print(" . ");
+            
             // read name
             buff.readLine();
             str = buff.readLine();
-            if(str.split(":")[1].length() >= 2) // to check if there is content
+            if(str.split(":").length >= 2) // to check if there is content after the ':'
                 ref.setName(str.split(":")[1].trim());
             else // if there is no content if is replaces with NO ____
                 ref.setName("NO NAME");
             //System.out.println(ref.getName());
             
+            System.out.print(" . ");
+            
             // read address
             buff.readLine();
             str = buff.readLine();
-            if(str.split(":")[1].length() >= 2)
+            if(str.split(":").length >= 2)
                 ref.setStreetName(str.split(":")[1].trim());
             else
                 ref.setStreetName("NO STREET NAME");
             //System.out.println(ref.getStreetName());
             
+            System.out.print(" . ");
+            
             // read postcode
             buff.readLine();
             str = buff.readLine();
             try {
-                if(str.split(":")[1].length() > 6)
+                if(str.split(":").length >= 2)
                     ref.setFullPostcode(str.split(":")[1].trim());
                 else {
                     ref.setPostCode(0000);
@@ -171,20 +179,24 @@ public class JavamailExtraction {
                 System.out.println(e.toString());
             }
             
+            System.out.print(" . ");
+            
             // read city
             buff.readLine();
             str = buff.readLine();
-            if(str.split(":")[1].length() >= 2)
+            if(str.split(":").length >= 2)
                 ref.setCity(str.split(":")[1].trim());
             else
                 ref.setCity("NO CITY");
             //System.out.println(ref.getCity());
             
+            System.out.print(" . ");
+            
             // read country
             buff.readLine();
             str = buff.readLine();
             try {
-                if(str.split(":")[1].length() >= 2)
+                if(str.split(":").length >= 2)
                     ref.setCountry(str.split(":")[1].toLowerCase().trim());
                 else {
                     ref.setCountry("NO COUNTRY");
@@ -196,6 +208,8 @@ public class JavamailExtraction {
             }
             //System.out.println(ref.getCountry());
             
+            System.out.print(" . ");
+            
             // read phone number
             buff.readLine();
             str = buff.readLine();
@@ -205,9 +219,12 @@ public class JavamailExtraction {
                 ref.setPhone("NO PHONE NUMBER");
             //System.out.println(ref.getPhone());
             
+            System.out.print(" . \n");
+            
             buff.close();
             
             referralArrayList.add(ref);
+            count++;
         }
         return referralArrayList;
     }

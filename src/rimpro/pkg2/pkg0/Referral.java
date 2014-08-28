@@ -153,11 +153,32 @@ public class Referral {
     }
 
     public void setFullPostcode(String fullPostcode) {
-        this.fullPostcode = fullPostcode.trim();
-        this.fullPostcode.replaceAll("\\s","");
-        setPostCode(Integer.parseInt(this.fullPostcode.substring(0, 4)));
-        if (this.fullPostcode.length() > 4){
-            setPostcodeLetters(this.fullPostcode.substring(4,7));
+        this.fullPostcode = fullPostcode;
+        try {
+            for(int i = 0; this.fullPostcode.length() >= 4 && i < 4; i++) {
+                if(!this.fullPostcode.substring(i, i + 1).matches("[0-9]")) {
+                    this.setPostCode(0000);
+                    throw new myException("Invalid postcode, the first four characters are not numbers");
+                }
+            }
+            
+            setPostCode(Integer.parseInt(this.fullPostcode.substring(0, 4)));
+            if (this.fullPostcode.length() > 4){ // if true, then the postcode has letters
+                if(this.fullPostcode.length() == 6) // no space between the letters
+                    setPostcodeLetters(this.fullPostcode.substring(4,6));
+                else if(this.fullPostcode.length() == 7) // space between the letters
+                    setPostcodeLetters(this.fullPostcode.substring(5,7));
+                else 
+                    throw new myException("Invalid postcode, problem reading the letters.");
+            }
+            
+            else {
+                setPostCode(0000);
+                setValid(false);
+                throw new myException("Invalid postcode, postcode too short.");
+            }
+        } catch (myException e) {
+            System.out.println(e.getMessage());
         }
     }
 
