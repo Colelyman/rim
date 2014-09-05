@@ -26,7 +26,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class Referral {
-    private String name, streetName, city, country, assignedArea, postcodeLetters, email, phone;
+    private String name, streetName, city, country, assignedArea, postcodeLetters, email, phone, zone;
     private Long areaPhone;
     private Integer postCode, number;
     private String date, id, fullPostcode;
@@ -41,6 +41,7 @@ public class Referral {
         this.sent = false;
         this.valid = false;
         this.id += "-" + counter;
+        this.zone = "null";
         counter++;
     }
     
@@ -61,6 +62,7 @@ public class Referral {
         this.sent = false;
         this.valid = false;
         this.id += "-" + counter;
+        this.zone = "null";
         counter++;
     }
 
@@ -144,6 +146,10 @@ public class Referral {
         return fullPostcode;
     }
     
+    public String getZone() {
+        return zone;
+    }
+    
     public boolean isSent() {
         return this.sent;
     }
@@ -163,13 +169,17 @@ public class Referral {
             }
             
             setPostCode(Integer.parseInt(this.fullPostcode.substring(0, 4)));
-            if (this.fullPostcode.length() > 4){ // if true, then the postcode has letters
+            
+            if(this.fullPostcode.length() == 4)
+                return;
+            else if (this.fullPostcode.length() > 5){ // if true, then the postcode has letters
                 if(this.fullPostcode.length() == 6) // no space between the letters
                     setPostcodeLetters(this.fullPostcode.substring(4,6));
                 else if(this.fullPostcode.length() == 7) // space between the letters
                     setPostcodeLetters(this.fullPostcode.substring(5,7));
                 else 
                     throw new myException("Invalid postcode, problem reading the letters.");
+                this.fullPostcode = this.postCode.toString() + " " + this.postcodeLetters;
             }
             
             else {
@@ -237,6 +247,10 @@ public class Referral {
     public void setValid(boolean valid) {
         this.valid = valid;
     } 
+    
+    public void setZone(String zone) {
+        this.zone = zone;
+    }
     
     public void print() {
         System.out.println("Name: " + this.name);

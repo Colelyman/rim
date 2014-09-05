@@ -18,7 +18,6 @@ public class DataToCsv {
     public DataToCsv(List referrals){
         this.referrals = referrals;
     }
-   
  
    public void GenerateCsvFile() {
 	try
@@ -28,11 +27,12 @@ public class DataToCsv {
                 writer.append(referrals.get(i).getId() + ','); //ReferralID
                 writer.append(referrals.get(i).getName() + ','); //Name
                 writer.append(referrals.get(i).getStreetName() + ','); //Street name
-                writer.append(referrals.get(i).getPostCode() + referrals.get(i).getPostcodeLetters() + ','); //Postcode
+                writer.append(referrals.get(i).getFullPostcode() + ','); //Postcode
                 writer.append(referrals.get(i).getCity() + ','); //City
                 writer.append(referrals.get(i).getCountry() + ','); //Country
                 writer.append(referrals.get(i).getPhone() + ','); //Phone number
                 writer.append(referrals.get(i).getAssignedArea() + ','); //Assigned area
+                writer.append(referrals.get(i).getZone() + ','); //Zone
                 if(referrals.get(i).isValid())
                     writer.append(referrals.get(i).getAreaPhone().toString() + ','); //The phone number that the referral is sent to
                 if(referrals.get(i).isSent())

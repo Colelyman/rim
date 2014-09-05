@@ -41,6 +41,7 @@ public class RImPro20 {
         // Initialize areaNumber and postCodeArea lists
         Area_number areaNumber = new Area_number();
         areaNumber.readFile();
+        areaNumber.generateAreaZoneIndex();
         
         PostcodeArea postcode = new PostcodeArea();
         
@@ -61,6 +62,7 @@ public class RImPro20 {
             
             if(ref.isValid()) {
                 ref.setAreaPhone(areaNumber.chooseNumber(ref.getAssignedArea()));
+                ref.setZone(areaNumber.getZone(ref.getAssignedArea()));
                 //ref.print();
             }
         }
