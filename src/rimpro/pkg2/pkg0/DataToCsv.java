@@ -8,6 +8,13 @@ import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+import com.google.gdata.client.spreadsheet.*;
+import com.google.gdata.data.spreadsheet.*;
+import com.google.gdata.util.*;
+import java.net.URL;
+import java.net.MalformedURLException;
+
+
 /**
  *
  * @author Boatswain & Record Keeper
@@ -50,6 +57,32 @@ public class DataToCsv {
 	} 
     }
    
+   public static boolean pushToGoogleSheets() throws AuthenticationException, MalformedURLException, IOException, ServiceException {
+       try {
+            SpreadsheetService service = new SpreadsheetService("RimPro 2.0");
+            System.out.println("After service");
+            service.setUserCredentials("belnethreferral@gmail.com", ""); // authorization
+            System.out.println("Authorized");
+            URL url = new URL("https://spreadsheets.google.com/feeds/spreadsheets/1cagRTmhzJT2eKmvq8m_-mpAVJDjsemY_tOhmsYhajjQ/private/full");
+            SpreadsheetFeed feed = service.getFeed(url, SpreadsheetFeed.class);
+            List<SpreadsheetEntry> spreadsheets = feed.getEntries();
+            SpreadsheetEntry spreadsheet = spreadsheets.get(0);
+            System.out.println("Accessing spreadsheet: " + spreadsheet.getTitle().getPlainText());
+            /*List<WorksheetEntry> worksheets = spreadsheet.getWorksheets();
+            WorksheetEntry worksheet = worksheets.get(0);
+            if(worksheet.getTitle().getPlainText().equals("All Zones")) { // check to see if the worksheet is correct
+
+            }
+            else { // worksheet was not correct
+
+            }*/
+        } catch(Exception e) {
+            System.out.println(e.toString());
+        }
+       
+       return false;
+   }
+   
    public void convertBelgPostcodes() {
        try {
            FileWriter writer = new FileWriter("Z:\\12 Supervisor\\Referral Improvement Program\\Generated_Belgian_Postcodes.csv", false);
@@ -80,7 +113,12 @@ public class DataToCsv {
        }
        
    }
-   public void main (String[] args) {
-       convertBelgPostcodes();
+   public static void main (String[] args) {
+       try {
+           pushToGoogleSheets();
+       } catch(Exception e) {
+           System.out.println(e.toString());
+       }
+       
    }
 }
