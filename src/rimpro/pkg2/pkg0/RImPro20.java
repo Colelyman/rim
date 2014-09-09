@@ -41,6 +41,7 @@ public class RImPro20 {
         // Initialize areaNumber and postCodeArea lists
         Area_number areaNumber = new Area_number();
         areaNumber.readFile();
+        areaNumber.generateAreaZoneIndex();
         
         PostcodeArea postcode = new PostcodeArea();
         
@@ -61,7 +62,7 @@ public class RImPro20 {
             
             if(ref.isValid()) {
                 ref.setAreaPhone(areaNumber.chooseNumber(ref.getAssignedArea()));
-                //ref.print();
+                ref.setZone(areaNumber.getZone(ref.getAssignedArea()));
             }
         }
         
@@ -91,9 +92,15 @@ public class RImPro20 {
             }
         }
         
-         // Export to csv file
-        DataToCsv writer = new DataToCsv(referrals);
-        writer.GenerateCsvFile();
+         // Export to csv file and to Google Sheets
+        try {
+            DataToCsv writer = new DataToCsv(referrals);
+            writer.GenerateCsvFile();
+            writer.pushToGoogleSheets();
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }
     }
     
 }

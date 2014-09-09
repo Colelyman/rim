@@ -26,16 +26,16 @@ import java.io.*;
  */
 public class PostcodeArea {
     
-    public String getArea(int postcode, boolean nederland) { // nederland == true, in the Netherlands. nederland == false, in Belgium
+    public String getArea(String postcode, boolean nederland) { // nederland == true, in the Netherlands. nederland == false, in Belgium
         String area = "null";
-        if(postcode == 0000)
+        if(postcode.equals("0000"))
             return area;
         String fileName = "Z:\\12 Supervisor\\Referral Improvement Program\\RImPro 2.0\\src\\rImpro\\pkg2\\pkg0\\Ward_postcode_index_2_without_postcode.csv";
         if(!nederland) // if nederland == false then it is in Belgium
             fileName = "Z:\\12 Supervisor\\Referral Improvement Program\\RImPro 2.0\\src\\rImpro\\pkg2\\pkg0\\Ward_postcode_index_2_without_postcode_belgium.csv";
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            for (int i = 0; i < (postcode - 999); i++)
+            for (int i = 0; i < (Integer.parseInt(postcode) - 999); i++)
                 area = reader.readLine();
             if(area.equals("null"))
                 throw new myException("Post Code: " + postcode + " does not exist");

@@ -26,26 +26,29 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class Referral {
-    private String name, streetName, city, country, assignedArea, postcodeLetters, email, phone;
+    private String name, streetName, city, country, assignedArea, postcodeLetters, postCode, email, phone, zone;
     private Long areaPhone;
-    private Integer postCode, number;
+    private Integer number;
     private String date, id, fullPostcode;
     private SimpleDateFormat dateFormat;
     private boolean sent, valid;
     private static int counter = 0;
 
      public Referral() {
+        this.areaPhone = new Long(0);
         this.dateFormat = new SimpleDateFormat("dd/M/yy-HH:mm");
         this.date = dateFormat.format(new Date());
         this.id = date;
         this.sent = false;
         this.valid = false;
         this.id += "-" + counter;
+        this.zone = "null";
         counter++;
     }
     
     
-    public Referral(String name, String address, Integer number, Integer postCode, String city, String country, String phone, String postcodeLetters, String email) {
+    public Referral(String name, String address, Integer number, String postCode, String city, String country, String phone, String postcodeLetters, String email) {
+        this.areaPhone = new Long(0);
         this.name = name;
         this.streetName = address;
         this.number = number;
@@ -61,6 +64,7 @@ public class Referral {
         this.sent = false;
         this.valid = false;
         this.id += "-" + counter;
+        this.zone = "null";
         counter++;
     }
 
@@ -100,7 +104,7 @@ public class Referral {
         return country;
     }
 
-    public Integer getPostCode() {
+    public String getPostCode() {
         return postCode;
     }
 
@@ -137,11 +141,21 @@ public class Referral {
     }
 
     public String getPostcodeLetters() {
-        return postcodeLetters;
+        if(this.isNLD())
+            return postcodeLetters;
+        else
+            return "";
     }
     
     public String getFullPostcode() {
         return fullPostcode;
+    }
+    
+    public String getZone() {
+        if(this.isValid())
+            return zone;
+        else
+            return "null";
     }
     
     public boolean isSent() {
@@ -156,24 +170,32 @@ public class Referral {
         this.fullPostcode = fullPostcode;
         try {
             for(int i = 0; this.fullPostcode.length() >= 4 && i < 4; i++) {
-                if(!this.fullPostcode.substring(i, i + 1).matches("[0-9]")) {
-                    this.setPostCode(0000);
-                    throw new myException("Invalid postcode, the first four characters are not numbers");
+                if(!this.fullPostcode.substring(i, i + 1).matches("[0-9]") || this.fullPostcode.substring(i, i + 1).matches("\\s")) {
+                    this.setPostCode("0000");
+                    throw new myException("Invalid postcode, the first four characters are not numbers. The postcode given was: " + fullPostcode);
                 }
             }
             
-            setPostCode(Integer.parseInt(this.fullPostcode.substring(0, 4)));
-            if (this.fullPostcode.length() > 4){ // if true, then the postcode has letters
+            if(this.fullPostcode.length() < 4) {
+                setPostCode("0000");
+                setValid(false);
+                throw new myException("Invalid postcode, postcode is too short. The postcode given was: " + fullPostcode);
+            }
+            setPostCode(this.fullPostcode.substring(0, 4));
+            if (this.fullPostcode.length() == 4)
+                return;
+            else if (this.fullPostcode.length() > 5) { // if true, then the postcode has letters
                 if(this.fullPostcode.length() == 6) // no space between the letters
                     setPostcodeLetters(this.fullPostcode.substring(4,6));
                 else if(this.fullPostcode.length() == 7) // space between the letters
                     setPostcodeLetters(this.fullPostcode.substring(5,7));
                 else 
                     throw new myException("Invalid postcode, problem reading the letters.");
+                this.fullPostcode = this.postCode.toString() + " " + this.postcodeLetters;
             }
             
             else {
-                setPostCode(0000);
+                setPostCode("0000");
                 setValid(false);
                 throw new myException("Invalid postcode, postcode too short.");
             }
@@ -195,7 +217,7 @@ public class Referral {
     }
 
     public void setCountry(String country) {
-        this.country = country;
+        this.country = Character.toUpperCase(country.charAt(0)) + country.substring(1);
     }
 
     public void setAssignedArea(String assignedArea) {
@@ -210,7 +232,7 @@ public class Referral {
         this.email = email;
     }
 
-    public void setPostCode(Integer postCode) {
+    public void setPostCode(String postCode) {
         this.postCode = postCode;
     }
 
@@ -237,6 +259,10 @@ public class Referral {
     public void setValid(boolean valid) {
         this.valid = valid;
     } 
+    
+    public void setZone(String zone) {
+        this.zone = zone;
+    }
     
     public void print() {
         System.out.println("Name: " + this.name);

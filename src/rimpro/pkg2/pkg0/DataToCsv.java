@@ -20,7 +20,7 @@ import java.net.MalformedURLException;
  * @author Boatswain & Record Keeper
  */
 public class DataToCsv {
-    List<Referral> referrals = new ArrayList();
+    static List<Referral> referrals = new ArrayList();
     
     public DataToCsv(List referrals){
         this.referrals = referrals;
@@ -35,11 +35,12 @@ public class DataToCsv {
                 writer.append(referrals.get(i).getId() + ','); //ReferralID
                 writer.append(referrals.get(i).getName() + ','); //Name
                 writer.append(referrals.get(i).getStreetName() + ','); //Street name
-                writer.append(referrals.get(i).getPostCode() + referrals.get(i).getPostcodeLetters() + ','); //Postcode
+                writer.append(referrals.get(i).getPostCode() + " " + referrals.get(i).getPostcodeLetters() + ','); //Postcode
                 writer.append(referrals.get(i).getCity() + ','); //City
                 writer.append(referrals.get(i).getCountry() + ','); //Country
                 writer.append(referrals.get(i).getPhone() + ','); //Phone number
                 writer.append(referrals.get(i).getAssignedArea() + ','); //Assigned area
+                writer.append(referrals.get(i).getZone() + ','); //Assigned zone
                 if(referrals.get(i).isValid())
                     writer.append(referrals.get(i).getAreaPhone().toString() + ','); //The phone number that the referral is sent to
                 if(referrals.get(i).isSent())
@@ -57,27 +58,45 @@ public class DataToCsv {
 	} 
     }
    
-   public static boolean pushToGoogleSheets() throws AuthenticationException, MalformedURLException, IOException, ServiceException {
+   public boolean pushToGoogleSheets() throws AuthenticationException, MalformedURLException, IOException, ServiceException {
        try {
             SpreadsheetService service = new SpreadsheetService("RimPro 2.0");
-            System.out.println("After service");
             service.setUserCredentials("belnethreferral@gmail.com", ""); // authorization
-            System.out.println("Authorized");
-            URL url = new URL("https://spreadsheets.google.com/feeds/spreadsheets/1cagRTmhzJT2eKmvq8m_-mpAVJDjsemY_tOhmsYhajjQ/private/full");
-            SpreadsheetFeed feed = service.getFeed(url, SpreadsheetFeed.class);
-            List<SpreadsheetEntry> spreadsheets = feed.getEntries();
-            SpreadsheetEntry spreadsheet = spreadsheets.get(0);
-            System.out.println("Accessing spreadsheet: " + spreadsheet.getTitle().getPlainText());
-            /*List<WorksheetEntry> worksheets = spreadsheet.getWorksheets();
-            WorksheetEntry worksheet = worksheets.get(0);
-            if(worksheet.getTitle().getPlainText().equals("All Zones")) { // check to see if the worksheet is correct
-
+            URL url = new URL("https://spreadsheets.google.com/feeds/worksheets/1cagRTmhzJT2eKmvq8m_-mpAVJDjsemY_tOhmsYhajjQ/private/full"); // fetch spreadsheet
+            WorksheetFeed feed = service.getFeed(url, WorksheetFeed.class); // gets worksheets in SpreadSheet
+            List<WorksheetEntry> worksheets = feed.getEntries(); // puts worksheets into List
+            WorksheetEntry allZones = worksheets.get(0);
+            if(!worksheets.get(0).getTitle().getPlainText().equals("All Zones")) { // assigns allZones to "All Zones" worksheet
+                for(int i = 1; i < worksheets.size(); i++) {
+                    if(worksheets.get(i).getTitle().getPlainText().equals("All Zones"))
+                        allZones = worksheets.get(i);
+                }
             }
-            else { // worksheet was not correct
+            
+            URL listFeedUrl = allZones.getListFeedUrl();
+            ListFeed listFeed = service.getFeed(listFeedUrl, ListFeed.class);
+            for(Referral ref : referrals) {
+                ListEntry row = new ListEntry();
+                row.getCustomElements().setValueLocal("Referral", ref.getId());
+                row.getCustomElements().setValueLocal("Name", ref.getName());
+                row.getCustomElements().setValueLocal("Address1", ref.getStreetName());
+                row.getCustomElements().setValueLocal("Address2", ref.getPostCode() + " " + ref.getPostcodeLetters());
+                row.getCustomElements().setValueLocal("City", ref.getCity());
+                row.getCustomElements().setValueLocal("Country", ref.getCountry());
+                row.getCustomElements().setValueLocal("Phone", ref.getPhone());
+                row.getCustomElements().setValueLocal("Area", ref.getAssignedArea());
+                row.getCustomElements().setValueLocal("ReferralSentTo", ref.getAreaPhone().toString());
+                row.getCustomElements().setValueLocal("Zone", ref.getZone());
+                if(ref.isSent())
+                    row.getCustomElements().setValueLocal("SentOrNotSent", "SENT");
+                else
+                    row.getCustomElements().setValueLocal("SentOrNotSent", "NOT SENT");
 
-            }*/
+                row = service.insert(listFeedUrl, row);
+            }
         } catch(Exception e) {
             System.out.println(e.toString());
+            e.printStackTrace();
         }
        
        return false;
@@ -110,14 +129,6 @@ public class DataToCsv {
        catch(IOException e)
        {
            e.printStackTrace();
-       }
-       
-   }
-   public static void main (String[] args) {
-       try {
-           pushToGoogleSheets();
-       } catch(Exception e) {
-           System.out.println(e.toString());
        }
        
    }

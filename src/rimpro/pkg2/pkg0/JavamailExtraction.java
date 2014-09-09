@@ -16,21 +16,16 @@
  */
 package rimpro.pkg2.pkg0;
 
-import com.sun.mail.imap.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.*;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.FetchProfile;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
 import javax.mail.Flags;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -171,7 +166,7 @@ public class JavamailExtraction {
                 if(str.split(":").length >= 2)
                     ref.setFullPostcode(str.split(":")[1].trim());
                 else {
-                    ref.setPostCode(0000);
+                    ref.setPostCode("0000");
                     ref.setValid(false);
                     throw new myException("Postcode is invalid!! Referral id: " + ref.getId());
                 }

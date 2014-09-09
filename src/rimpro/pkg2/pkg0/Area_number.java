@@ -37,6 +37,7 @@ import java.util.TreeMap;
 public class Area_number { //readFile() must be called before class can be used
     
     private TreeMap<String, List<Long> > phoneMap = new TreeMap();
+    private TreeMap<String, String> areaZoneIndex = new TreeMap();
     
     public void readFile() {       
         try {
@@ -58,6 +59,25 @@ public class Area_number { //readFile() must be called before class can be used
         catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+    
+    public void generateAreaZoneIndex() {       
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("Z:\\12 Supervisor\\Referral Improvement Program\\RImPro 2.0\\src\\rImpro\\pkg2\\pkg0\\Area_Zone_Index.csv"));
+            String areaZone;
+            while ((areaZone = reader.readLine()) != null) 
+                areaZoneIndex.put(areaZone.split(",")[0], areaZone.split(",")[1]);
+            reader.close();
+        }
+        catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+    
+    public String getZone(String area) {
+        if(area.equals("null"))
+            return "null";
+        return areaZoneIndex.get(area);
     }
     
     public Long chooseNumber(String assignedArea){
