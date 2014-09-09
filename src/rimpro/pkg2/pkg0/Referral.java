@@ -43,6 +43,8 @@ public class Referral {
         this.valid = false;
         this.id += "-" + counter;
         this.zone = "null";
+        this.fullPostcode = "null";
+        this.postCode = "null";
         counter++;
     }
     
@@ -65,6 +67,8 @@ public class Referral {
         this.valid = false;
         this.id += "-" + counter;
         this.zone = "null";
+        this.fullPostcode = "null";
+        this.postCode = "null";
         counter++;
     }
 

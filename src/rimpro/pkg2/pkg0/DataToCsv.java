@@ -35,7 +35,7 @@ public class DataToCsv {
                 writer.append(referrals.get(i).getId() + ','); //ReferralID
                 writer.append(referrals.get(i).getName() + ','); //Name
                 writer.append(referrals.get(i).getStreetName() + ','); //Street name
-                writer.append(referrals.get(i).getPostCode() + " " + referrals.get(i).getPostcodeLetters() + ','); //Postcode
+                writer.append(referrals.get(i).getFullPostcode() + ','); //Postcode
                 writer.append(referrals.get(i).getCity() + ','); //City
                 writer.append(referrals.get(i).getCountry() + ','); //Country
                 writer.append(referrals.get(i).getPhone() + ','); //Phone number
@@ -80,7 +80,7 @@ public class DataToCsv {
                 row.getCustomElements().setValueLocal("Referral", ref.getId());
                 row.getCustomElements().setValueLocal("Name", ref.getName());
                 row.getCustomElements().setValueLocal("Address1", ref.getStreetName());
-                row.getCustomElements().setValueLocal("Address2", ref.getPostCode() + " " + ref.getPostcodeLetters());
+                row.getCustomElements().setValueLocal("Address2", ref.getFullPostcode());
                 row.getCustomElements().setValueLocal("City", ref.getCity());
                 row.getCustomElements().setValueLocal("Country", ref.getCountry());
                 row.getCustomElements().setValueLocal("Phone", ref.getPhone());
