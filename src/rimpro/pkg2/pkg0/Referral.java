@@ -98,7 +98,7 @@ public class Referral {
             System.out.println(e);
             return false;
         }
-        if(country.substring(0, 1).equals("b"))
+        if(country.substring(0, 1).equals("B"))
             return false;
         else
             return true;
