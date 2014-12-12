@@ -37,7 +37,7 @@ public class PostcodeArea {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             for (int i = 0; i < (Integer.parseInt(postcode) - 999); i++)
                 area = reader.readLine();
-            if(area.equals("null"))
+            if(area.equals("null") || area.equals(""))
                 throw new myException("Post Code: " + postcode + " does not exist");
         } catch (myException|IOException e) { // custom Exception
             System.out.println(e.toString());

@@ -27,7 +27,7 @@ public class DataToCsv {
     }
    
  
-   public void GenerateCsvFile() {
+   public void GenerateCsvFile(String file) {
 	try
 	{
 	    FileWriter writer = new FileWriter("Z:\\12 Supervisor\\Referral Improvement Program\\ReferralLog.csv", true);
@@ -61,7 +61,7 @@ public class DataToCsv {
    public boolean pushToGoogleSheets() throws AuthenticationException, MalformedURLException, IOException, ServiceException {
        try {
             SpreadsheetService service = new SpreadsheetService("RimPro 2.0");
-            service.setUserCredentials("belnethreferral@gmail.com", ""); // authorization
+            service.setUserCredentials("belnethreferral@gmail.com", "Moroni10"); // authorization
             URL url = new URL("https://spreadsheets.google.com/feeds/worksheets/1cagRTmhzJT2eKmvq8m_-mpAVJDjsemY_tOhmsYhajjQ/private/full"); // fetch spreadsheet
             WorksheetFeed feed = service.getFeed(url, WorksheetFeed.class); // gets worksheets in SpreadSheet
             List<WorksheetEntry> worksheets = feed.getEntries(); // puts worksheets into List

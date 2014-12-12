@@ -209,15 +209,15 @@ public class Referral {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = Character.toUpperCase(name.charAt(0)) + name.substring(1);
     }
 
     public void setStreetName(String streetName) {
-        this.streetName = streetName;
+        this.streetName = Character.toUpperCase(streetName.charAt(0)) + streetName.substring(1);
     }
 
     public void setCity(String city) {
-        this.city = city;
+        this.city = Character.toUpperCase(city.charAt(0)) + city.substring(1);
     }
 
     public void setCountry(String country) {

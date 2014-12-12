@@ -81,9 +81,9 @@ public class Area_number { //readFile() must be called before class can be used
     }
     
     public Long chooseNumber(String assignedArea){
-        List<Long> temp = phoneMap.get(assignedArea);
-        Random r = new Random();
-        return temp.get(r.nextInt(temp.size()));
+            List<Long> temp = phoneMap.get(assignedArea);
+            Random r = new Random();
+            return temp.get(r.nextInt(temp.size()));
     }
     
     public void print() {

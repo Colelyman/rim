@@ -29,6 +29,7 @@ import javax.mail.MessagingException;
 import javax.mail.Flags;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.Multipart;
 
 /**
  *
@@ -62,7 +63,7 @@ public class JavamailExtraction {
             } catch (MessagingException ex) {
                 folder.open(Folder.READ_ONLY);
             }
-
+            
             // Start reading messages
             int totalMessages = folder.getMessageCount();
 
@@ -89,9 +90,9 @@ public class JavamailExtraction {
             if (!sent.exists()) {
                 sent.create(Folder.HOLDS_MESSAGES);
             }
-
+            
             for (Message msg : msgs) {
-                //System.out.println(msg.getContent().toString());
+                System.out.println(msg.getContent().toString());
                 if (msg.getFolder() != sent){
                     messages.add(msg.getContent().toString());
                 }
@@ -122,49 +123,47 @@ public class JavamailExtraction {
             
             // read through header and read email
             String str;
+            String str2;
             while((str = buff.readLine()) != null) {
-                if(str.length() < 5) {
-                    continue;
-                }
-                if(str.substring(0, 5).equals("Email")) {
-                    if(str.split(":").length >= 2)
-                        ref.setEmail(str.split(":")[1]);
-                    else
-                        ref.setEmail("NO EMAIL");
-                    break; // finished reading through the header and ready to read the information of the referral
+                System.out.println(str);
+                if(str.split(":")[0].equals("Voornaam ")) {
+                    break;
                 }
             }
+            System.out.println(str);
             
             System.out.print(" . ");
             
             // read name
-            buff.readLine();
-            str = buff.readLine();
-            if(str.split(":").length >= 2) // to check if there is content after the ':'
-                ref.setName(str.split(":")[1].trim());
-            else // if there is no content if is replaces with NO ____
-                ref.setName("NO NAME");
-            //System.out.println(ref.getName());
+            System.out.println(str);
+            str = str.split(":")[1];
+            str2 = buff.readLine();
+            str2 = str2.split(":")[1];
+            str += " " + str2;
+            ref.setName(str.trim());
+            System.out.println(ref.getName());
             
             System.out.print(" . ");
             
-            // read address
-            buff.readLine();
-            str = buff.readLine();
-            if(str.split(":").length >= 2)
-                ref.setStreetName(str.split(":")[1].trim());
-            else
-                ref.setStreetName("NO STREET NAME");
-            //System.out.println(ref.getStreetName());
+            // read street name
+            str = buff.readLine(); // get Street Name
+            ref.setStreetName(str.trim());
             
             System.out.print(" . ");
             
             // read postcode
-            buff.readLine();
             str = buff.readLine();
-            try {
-                if(str.split(":").length >= 2)
-                    ref.setFullPostcode(str.split(":")[1].trim());
+            str = str.split(":")[1];
+            ref.setFullPostcode(str.trim());
+            /*try {
+                if(str.split(" ").length == 1) {
+                    ref.setFullPostcode(str.split(" ")[0].trim());
+                    ref.setCountry("Belgie");
+                }
+                else if(str.split(" ").length == 2) {
+                    ref.setFullPostcode(str.split(" ")[0].trim() + str.split(" ")[1].trim());
+                    ref.setCountry("Nederland");
+                }
                 else {
                     ref.setPostCode("0000");
                     ref.setValid(false);
@@ -172,25 +171,21 @@ public class JavamailExtraction {
                 }
             } catch (myException e) {
                 System.out.println(e.toString());
-            }
+            }*/
             
             System.out.print(" . ");
             
             // read city
-            buff.readLine();
-            str = buff.readLine();
-            if(str.split(":").length >= 2)
-                ref.setCity(str.split(":")[1].trim());
-            else
-                ref.setCity("NO CITY");
+            str = str.split(":")[1];
+            ref.setCity(str.trim());
             //System.out.println(ref.getCity());
             
             System.out.print(" . ");
             
             // read country
-            buff.readLine();
             str = buff.readLine();
-            try {
+            ref.setCountry(str.toLowerCase().trim());
+            /*try {
                 if(str.split(":").length >= 2)
                     ref.setCountry(str.split(":")[1].toLowerCase().trim());
                 else {
@@ -200,20 +195,19 @@ public class JavamailExtraction {
                 }
             } catch (myException e) {
                 System.out.println(e.toString());
-            }
+            }*/
             //System.out.println(ref.getCountry());
             
             System.out.print(" . ");
             
-            // read phone number
-            buff.readLine();
+            // read email
             str = buff.readLine();
-            if(str.split(":").length >= 2)
-                ref.setPhone(str.split(":")[1].trim());
-            else
-                ref.setPhone("NO PHONE NUMBER");
+            ref.setEmail(str.trim());
             //System.out.println(ref.getPhone());
             
+            // read phone number
+            str = buff.readLine();
+            ref.setPhone(str.trim());
             System.out.print(" . \n");
             
             buff.close();
